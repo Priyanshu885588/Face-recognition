@@ -2,12 +2,17 @@ import React, { useRef, useEffect, useState } from "react";
 import * as faceapi from "face-api.js";
 import Webcam from "react-webcam";
 
+import { useSearchParams } from "react-router-dom";
+import { registerface } from "./services/api";
+
 const Register = () => {
   const webcamRef = useRef(null);
   const overlayRef = useRef(null);
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [faceDetected, setFaceDetected] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(0);
+  const [searchParams] = useSearchParams();
+  const userid = searchParams.get("userid");
 
   useEffect(() => {
     const loadModels = async () => {
@@ -83,11 +88,18 @@ const Register = () => {
 
       if (detections.length > 0) {
         const faceDescriptor = detections[0].descriptor;
-        localStorage.setItem(
-          "userFaceDescriptor",
-          JSON.stringify(Array.from(faceDescriptor))
-        );
-        setRegistrationSuccess(1);
+
+        try {
+          const resp = await registerface({
+            userId: userid,
+            faceInfo: Array.from(faceDescriptor),
+          });
+          console.log(resp);
+          setRegistrationSuccess(1);
+        } catch (error) {
+          console.error("Error in registering face data:", error);
+          setRegistrationSuccess(2);
+        }
       } else {
         setRegistrationSuccess(2);
       }
@@ -120,19 +132,21 @@ const Register = () => {
         Register
       </button>
 
-      {faceDetected && (
-        <p className="mt-4 text-lg font-medium text-green-600">Face Detected</p>
-      )}
-      {registrationSuccess == 1 && (
-        <p className="mt-2 text-lg font-medium text-green-700">
-          Registration Successful!
-        </p>
-      )}
-      {registrationSuccess == 2 && (
-        <p className="mt-2 text-lg font-medium text-green-700">
-          Registration unsuccessful!
-        </p>
-      )}
+      <div className="absolute right-2 rounded-xl bg-gray-200 flex flex-col justify-center items-center py-1 px-2 top-2">
+        {faceDetected && (
+          <p className=" text-md font-medium text-green-700">Face Detected</p>
+        )}
+        {registrationSuccess === 1 && (
+          <p className=" text-md font-medium text-green-700">
+            Registration Successful!
+          </p>
+        )}
+        {registrationSuccess === 2 && (
+          <p className=" text-md font-medium text-red-700">
+            Registration Unsuccessful!
+          </p>
+        )}
+      </div>
     </div>
   );
 };
