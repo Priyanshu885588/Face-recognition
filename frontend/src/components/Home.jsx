@@ -56,18 +56,7 @@ export const Home = () => {
       <nav className="flex justify-center mt-3">
         <ul className="flex text-lg font-bold">
           <li>
-            <Link
-              to="/register"
-              className="border-b border-black p-1 hover:text-xl"
-            >
-              Register
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/login"
-              className="border-t border-black p-1 hover:text-xl"
-            >
+            <Link to="/login" className=" p-1 ">
               Login
             </Link>
           </li>
