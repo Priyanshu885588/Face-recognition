@@ -3,6 +3,8 @@ import Webcam from "react-webcam";
 import * as faceapi from "face-api.js";
 import { GiMoebiusTriangle } from "react-icons/gi";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { getfacedata } from "./services/api";
+import { useSearchParams } from "react-router-dom";
 
 const Login = () => {
   const webcamRef = useRef(null);
@@ -10,6 +12,8 @@ const Login = () => {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [loginStatus, setLoginStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const userid = searchParams.get("userid");
 
   useEffect(() => {
     const loadModels = async () => {
@@ -65,9 +69,9 @@ const Login = () => {
         if (detections.length > 0) {
           const inputFaceDescriptor = detections[0].descriptor;
 
-          const storedDescriptor = JSON.parse(
-            localStorage.getItem("userFaceDescriptor")
-          );
+          const response = await getfacedata(userid);
+
+          const storedDescriptor = response.data.faceInfo;
 
           if (storedDescriptor) {
             const distance = faceapi.euclideanDistance(

@@ -13,4 +13,15 @@ const registerface = async (data) => {
   }
 };
 
-export { registerface };
+const getfacedata = async (userid) => {
+  try {
+    console.log(userid);
+    const response = await axios.get(`${url}/getData?userId=${userid}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error in fetching face data:", error);
+    throw error;
+  }
+};
+
+export { registerface, getfacedata };
