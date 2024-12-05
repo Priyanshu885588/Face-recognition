@@ -13,6 +13,7 @@ const Register = () => {
   const [registrationSuccess, setRegistrationSuccess] = useState(0);
   const [searchParams] = useSearchParams();
   const userid = searchParams.get("userid");
+  const batch = searchParams.get("batch");
 
   useEffect(() => {
     const loadModels = async () => {
@@ -96,6 +97,10 @@ const Register = () => {
           });
           console.log(resp);
           setRegistrationSuccess(1);
+          window.open(
+            `http://localhost:5173/login?userid=${userid}&batch=${batch}`,
+            "_blank"
+          );
         } catch (error) {
           console.error("Error in registering face data:", error);
           setRegistrationSuccess(2);

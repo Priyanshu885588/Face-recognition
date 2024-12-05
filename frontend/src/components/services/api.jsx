@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const url = "https://face-recognition-n5j6.vercel.app/api/v1";
+const url = "http://localhost:3001/api/v1";
+const url2 = "http://localhost:3000/api/v1";
 
 const registerface = async (data) => {
   try {
@@ -24,4 +25,13 @@ const getfacedata = async (userid) => {
   }
 };
 
-export { registerface, getfacedata };
+const studentLogin = async (data, batch) => {
+  try {
+    const response = await axios.post(`${url2}/login?batch=${batch}`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { registerface, getfacedata, studentLogin };

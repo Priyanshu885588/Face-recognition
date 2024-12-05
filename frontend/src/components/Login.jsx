@@ -5,6 +5,7 @@ import { GiMoebiusTriangle } from "react-icons/gi";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { getfacedata } from "./services/api";
 import { useSearchParams } from "react-router-dom";
+import { studentLogin } from "./services/api";
 
 const Login = () => {
   const webcamRef = useRef(null);
@@ -14,6 +15,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const userid = searchParams.get("userid");
+  const batch = searchParams.get("batch");
 
   useEffect(() => {
     const loadModels = async () => {
@@ -82,6 +84,10 @@ const Login = () => {
 
             if (distance < 0.6) {
               setLoginStatus("Login successful!");
+
+              const data = await studentLogin({ uniqueid: userid }, batch);
+              localStorage.setItem("studentToken", data.token);
+              window.location.href = `http://localhost:5174/loginentry?token=${data.token}&batch=${batch}`;
               setLoading(false);
             } else {
               setLoginStatus("Login failed. Face not recognized.");
