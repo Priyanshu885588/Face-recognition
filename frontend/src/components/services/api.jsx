@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:3000/api/v1";
+const url = "https://face-recognition-n5j6.vercel.app/api/v1";
 
 const registerface = async (data) => {
   try {
